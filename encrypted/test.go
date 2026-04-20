@@ -43,7 +43,7 @@ func HexaDeca(words []string) string {
 	for i := 0; i < len(words); i++ {
 		val, err := strconv.ParseInt(words[i], 36, 64)
 		if err == nil {
-			result = append(result, strconv.FormatInt(val, 2))
+			result = append(result, strconv.FormatInt(val, 16))
 			continue
 		}
 		result = append(result, words[i])

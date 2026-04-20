@@ -66,25 +66,26 @@ func BinWords(words []string) string {
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
-	HexMessages := map[string]string{
-		"a": "HEXABET-'A': 33a 109586 2a4 654178d56",
-		"b": "HEXABET-'B': 33a 109586 2a4 654178d56",
-		"c": "HEXABET-'C': 33a 109586 2a4 654178d56",
-		"d": "HEXABET-'D': 33a 109586 2a4 654178d56",
-		"e": "HEXABET-'E': 33a 109586 2a4 654178d56",
-		"f": "HEXABET-'F': 33a 109586 2a4 654178d56",
+	HexMessages := map[string] string {
+		"a": "5315 451 35e9 2da14aa!!",
+		"b": "333 1765d5f476a 43ea 18b253 80924 555a!!",
+		"c": "a 17271e 70df 118c2e 142435 '2628dfa99e36 6dc0 7dd5'",
+		"d": "5b926992 6bbbccdc9bdd5 29f 14bfa43 20627160616 5315 2be2716 9b26 258 40ae!!!",
+		"e": "a 17271e 70df 118c2e 142435 '9542 118d86 2f3b5ac 196424e 2a4 18b253 92b151a6f7aae c64fa'",
+		"f": "dbdc6 66311381 2a4 42c 333 130498c9629 184 258-1f408018e55 2a4 42c?",
 	}
 
 	BinMessages := map[string]string{
-		"b": "BINABET- '0': 1100111010 100001001010110000110 1010100100 11001010100000101111000110101010110",
-		"i": "BINABET- '10': 1100111010 100001001010110000110 1010100100 11001010100000101111000110101010110",
-		"n": "BINABET- '11': 1100111010 100001001010110000110 1010100100 11001010100000101111000110101010110",
-		"a": "BINABET- '101': 1100111010 100001001010110000110 1010100100 11001010100000101111000110101010110",
-		"r": "BINABET- '111': 1100111010 100001001010110000110 1010100100 11001010100000101111000110101010110",
-		"y": "BINABET- '1011': 1100111010 100001001010110000110 1010100100 11001010100000101111000110101010110",
+		"b": "101001100010101 10001010001 11010111101001 10110110100001010010101010 1010111110011110 11011001111010 1001010010001001010100100 11010111101001 11001011010111110100001011001111001100100!!!",
+		"i": "110110011011011010010001100100110110 11000111011101000010 110001011001001010011 10100011010101000000001010 1100110011 10011000001001001100011001001011000101001 100001111101010 11000!",
+		"n": "1100011001001100010010000010010 1100100110 101001111110111110100: 101110001111110010101 10011011110011010100 1010 11110100111111100011 111101100 1000010111000110010100011 1011001011011111111101100?",
+		"a": "1010010111 1101010100 110011010 1010111110011110 101001111110101011111 1010010001111100 101101001101011100011111010100001000?",
+		"r": "10111000100111011111001000 101110010011000101001 11110111000000110100 110000101 1010111110011110 11010111101001 10110111011010001110100010 '11111011101011001100111101011100110 101000011011111101111 10010011001100011001011110001100000110110101100 1101011010100101001110011011011100100011'.",
+		"y": "1100011001001100010010000010010 1100100110 101001111110111110100: 10010 101111110 1010 10111110001111011100001101 101001111110011010101 10010110000000110110000011 1011000001100001011110100.",
 	}
 
 	fmt.Println("GREETINGS AGENT X . WELCOME TO THE LEAGUE OF SHADOWS\n A MESSAGE WILL BE SENT TO YOU IN A CODED LANGUAGE\n DON'T WORRY THE MACHINE WILL ALSO HELP YOU TO DE-ENCRYPT IT")
+	fmt.Println()
 
 	for {
 		fmt.Println("WHAT LANGUAGE DO YOU WANT THE MESSAGE IN:")
@@ -98,7 +99,7 @@ func main() {
 
 		case "1", "hexa":
 
-			fmt.Print("NICE CHOICE")
+			fmt.Print("NICE CHOICE ")
 
 			for {
 
@@ -112,28 +113,29 @@ func main() {
 				if !ok {
 					fmt.Println("YOU ARE TO PICK HEXABETS ONLY (hexadecimal alphabets)")
 					fmt.Println("TRY AGAIN")
-					fmt.Println(" ")
+					fmt.Println()
 
 					continue
 				}
 
-				fmt.Println(msg)
+				fmt.Printf("HEXABET-'%v': " + msg, strings.ToUpper(letter))
 				fmt.Println()
 
-				fmt.Println("DO YOU WANT TO DE-ENCRYPT IT? (yes/no)")
+				fmt.Println("DO YOU WANT TO DE-ENCRYPT IT? (YES/NO)")
+				fmt.Print("> ")
 				ans, _ := reader.ReadString('\n')
 				ans = strings.TrimSpace(strings.ToLower(ans))
 
 				if ans == "yes" {
 					tokens := Tokenize(msg)
 					fmt.Println()
-					fmt.Printf("DE-ENCRYPTED: %v\n", HexaWords(tokens))
+					fmt.Printf("DE-ENCRYPTED: %v\n", Capitalize(HexaWords(tokens)))
 					fmt.Println()
 
 				} else if ans == "no" {
 					fmt.Println("SEE YOU LATER THEN")
 					fmt.Println()
-					return
+					continue
 
 				} else {
 					fmt.Println("INVALID INPUT - LOGGED OUT")
@@ -144,11 +146,11 @@ func main() {
 			}
 
 		case "2", "bin":
-			fmt.Print("NICE CHOICE")
+			fmt.Print("NICE CHOICE ")
 
 			for {
 
-				fmt.Println("PICK A LETTER WITHIN THE RANGE OF LETTERs THAT MAKES UP THE LANGUAGE YOU ARE CURRENTLY SPEAKING")
+				fmt.Println("PICK A LETTER WITHIN THE RANGE OF LETTERS THAT MAKES UP THE LANGUAGE YOU ARE CURRENTLY SPEAKING")
 				fmt.Print("> ")
 
 				letter, _ := reader.ReadString('\n')
@@ -158,28 +160,29 @@ func main() {
 				if !ok {
 					fmt.Println("YOU ARE TO PICK BINABETS ONLY(letters that makes up the language)")
 					fmt.Println("TRY AGAIN")
-					fmt.Println(" ")
+					fmt.Println()
 
 					continue
 				}
 
-				fmt.Println(msg)
+				fmt.Printf("BINABET-'%v': " + msg, strings.ToUpper(letter))
 				fmt.Println()
 
-				fmt.Println("DO YOU WANT TO DE-ENCRYPT IT? (yes/no)")
+				fmt.Println("DO YOU WANT TO DE-ENCRYPT IT? (YES/NO)")
+				fmt.Print(">")
 				ans, _ := reader.ReadString('\n')
 				ans = strings.TrimSpace(strings.ToLower(ans))
 
 				if ans == "yes" {
 					tokens := Tokenize(msg)
 					fmt.Println()
-					fmt.Printf("DE-ENCRYPTED: %v\n", BinWords(tokens))
+					fmt.Printf("DE-ENCRYPTED: %v\n", Capitalize(BinWords(tokens)))
 					fmt.Println()
 
 				} else if ans == "no" {
 					fmt.Println("SEE YOU LATER THEN")
 					fmt.Println()
-					return
+					continue
 
 				} else {
 					fmt.Println("INVALID INPUT - LOGGED OUT")
@@ -191,6 +194,16 @@ func main() {
 
 		default:
 			fmt.Println("INVALID CHOICE. ENTER 1 OR 2")
+			fmt.Println()
 		}
 	}
+}
+
+func Capitalize(str string) string {
+	words := strings.Fields(str)
+
+	for i := 0; i < len(words); i++ {
+		words[i] = strings.ToUpper(string(words[i][0])) + strings.ToLower(words[i][1:])
+	}
+	return strings.Join(words, " ")
 }
