@@ -11,62 +11,46 @@ import (
 
 func tokenizer(input string) []string {
 	var tokens []string
-	current := ""
+	var current strings.Builder
 
 	for _, ch := range input {
 		if unicode.IsLetter(ch) || unicode.IsDigit(ch) {
-			current += string(ch)
+			current.WriteRune(ch)
 		} else {
-			if current != "" {
-				tokens = append(tokens, current)
-				current = ""
+			if current.Len() > 0 {
+				tokens = append(tokens, current.String())
+				current.Reset()
 			}
 			tokens = append(tokens, string(ch))
 		}
 	}
-
-	if current != "" {
-		tokens = append(tokens, current)
+	if current.Len() > 0{
+		tokens = append(tokens, current.String())
 	}
 
 	return tokens
 }
 
-func decodeAllMessage(input []string, base int) string {
+func decodeTokens(input []string, base int) string {
 	var result []string
 
-	for _, tokens := range input {
-		val, err := strconv.ParseInt(tokens, base, 64)
+	for _, token := range input {
+		val, err := strconv.ParseInt(token, base, 64)
 		if err == nil {
 			result = append(result, strconv.FormatInt(val, 36))
 		} else {
-			result = append(result, tokens)
+			result = append(result, token)
 		}
 	}
 
 	return strings.Join(result, "")
 }
 
-// func binWords(words []string) string {
-// 	var result []string
-
-// 	for i := 0; i < len(words); i++ {
-// 		val, err := strconv.ParseInt(words[i], 2, 64)
-// 		if err == nil {
-// 			result = append(result, strconv.FormatInt(val, 36))
-// 			continue
-// 		}
-// 		result = append(result, words[i])
-
-// 	}
-
-// 	return strings.Join(result, "")
-// }
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
-	HexMessages := map[string]string{
+	hexMessages := map[string]string{
 		"a": "5315 451 35e9 2da14aa!!",
 		"b": "333 1765d5f476a 43ea 18b253 80924 555a!!",
 		"c": "a 17271e 70df 118c2e 142435 '2628dfa99e36 6dc0 7dd5'",
@@ -75,7 +59,7 @@ func main() {
 		"f": "dbdc6 66311381 2a4 42c 333 130498c9629 184 258-1f408018e55 2a4 42c?",
 	}
 
-	BinMessages := map[string]string{
+	binMessages := map[string]string{
 		"b": "101001100010101 10001010001 11010111101001 10110110100001010010101010 1010111110011110 11011001111010 1001010010001001010100100 11010111101001 11001011010111110100001011001111001100100!!!",
 		"i": "110110011011011010010001100100110110 11000111011101000010 110001011001001010011 10100011010101000000001010 1100110011 10011000001001001100011001001011000101001 100001111101010 11000!",
 		"n": "1100011001001100010010000010010 1100100110 101001111110111110100: 101110001111110010101 10011011110011010100 1010 11110100111111100011 111101100 1000010111000110010100011 1011001011011111111101100?",
@@ -95,6 +79,7 @@ func main() {
 		languageChoice, err := reader.ReadString('\n')
 		if err != nil {
 			fmt.Println(err)
+			return
 		}
 		languageChoice = strings.TrimSpace(strings.ToLower(languageChoice))
 
@@ -112,10 +97,11 @@ func main() {
 				selectedSymbol, err := reader.ReadString('\n')
 				if err != nil {
 					fmt.Println(err)
+					return
 				}
 				selectedSymbol = strings.TrimSpace(strings.ToLower(selectedSymbol))
 
-				encodedMessage, ok := HexMessages[selectedSymbol]
+				encodedMessage, ok := hexMessages[selectedSymbol]
 				if !ok {
 					fmt.Println("YOU ARE TO PICK HEXABETS ONLY (hexadecimal alphabets)")
 					fmt.Println("TRY AGAIN")
@@ -131,13 +117,14 @@ func main() {
 				userResponse, err := reader.ReadString('\n')
 				if err != nil {
 					fmt.Println(err)
+					return
 				}
 				userResponse = strings.TrimSpace(strings.ToLower(userResponse))
 
 				if userResponse == "yes" {
 					tokens := tokenizer(encodedMessage)
 					fmt.Println()
-					fmt.Printf("DE-ENCRYPTED: %v\n", capitalize(decodeAllMessage(tokens, 16)))
+					fmt.Printf("DE-ENCRYPTED: %v\n", capitalize(decodeTokens(tokens, 16)))
 					fmt.Println()
 
 				} else if userResponse == "no" {
@@ -164,10 +151,11 @@ func main() {
 				selectedSymbol, err := reader.ReadString('\n')
 				if err != nil {
 					fmt.Println(err)
+					return
 				}
 				selectedSymbol = strings.TrimSpace(strings.ToLower(selectedSymbol))
 
-				encodedMessage, ok := BinMessages[selectedSymbol]
+				encodedMessage, ok := binMessages[selectedSymbol]
 				if !ok {
 					fmt.Println("YOU ARE TO PICK BINABETS ONLY(letters that makes up the language)")
 					fmt.Println("TRY AGAIN")
@@ -183,13 +171,14 @@ func main() {
 				userResponse, err := reader.ReadString('\n')
 				if err != nil {
 					fmt.Println(err)
+					return
 				}
 				userResponse = strings.TrimSpace(strings.ToLower(userResponse))
 
 				if userResponse == "yes" {
 					tokens := tokenizer(encodedMessage)
 					fmt.Println()
-					fmt.Printf("DE-ENCRYPTED: %v\n", capitalize(decodeAllMessage(tokens, 2)))
+					fmt.Printf("DE-ENCRYPTED: %v\n", capitalize(decodeTokens(tokens, 2)))
 					fmt.Println()
 
 				} else if userResponse == "no" {
