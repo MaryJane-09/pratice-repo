@@ -9,7 +9,7 @@ import (
 	"unicode"
 )
 
-func Tokenize(input string) []string {
+func tokenizer(input string) []string {
 	var tokens []string
 	current := ""
 
@@ -32,41 +32,41 @@ func Tokenize(input string) []string {
 	return tokens
 }
 
-func HexaWords(words []string) string {
+func decodeAllMessage(input []string, base int) string {
 	var result []string
 
-	for _, w := range words {
-		val, err := strconv.ParseInt(w, 16, 64)
+	for _, tokens := range input {
+		val, err := strconv.ParseInt(tokens, base, 64)
 		if err == nil {
 			result = append(result, strconv.FormatInt(val, 36))
 		} else {
-			result = append(result, w)
+			result = append(result, tokens)
 		}
 	}
 
 	return strings.Join(result, "")
 }
 
-func BinWords(words []string) string {
-	var result []string
+// func binWords(words []string) string {
+// 	var result []string
 
-	for i := 0; i < len(words); i++ {
-		val, err := strconv.ParseInt(words[i], 2, 64)
-		if err == nil {
-			result = append(result, strconv.FormatInt(val, 36))
-			continue
-		}
-		result = append(result, words[i])
+// 	for i := 0; i < len(words); i++ {
+// 		val, err := strconv.ParseInt(words[i], 2, 64)
+// 		if err == nil {
+// 			result = append(result, strconv.FormatInt(val, 36))
+// 			continue
+// 		}
+// 		result = append(result, words[i])
 
-	}
+// 	}
 
-	return strings.Join(result, "")
-}
+// 	return strings.Join(result, "")
+// }
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
-	HexMessages := map[string] string {
+	HexMessages := map[string]string{
 		"a": "5315 451 35e9 2da14aa!!",
 		"b": "333 1765d5f476a 43ea 18b253 80924 555a!!",
 		"c": "a 17271e 70df 118c2e 142435 '2628dfa99e36 6dc0 7dd5'",
@@ -92,10 +92,13 @@ func main() {
 		fmt.Println("1. HEXA")
 		fmt.Println("2. BINARY")
 		fmt.Print("> ")
-		choice, _ := reader.ReadString('\n')
-		choice = strings.TrimSpace(strings.ToLower(choice))
+		languageChoice, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println(err)
+		}
+		languageChoice = strings.TrimSpace(strings.ToLower(languageChoice))
 
-		switch choice {
+		switch languageChoice {
 
 		case "1", "hexa":
 
@@ -106,33 +109,38 @@ func main() {
 				fmt.Println("PICK A LETTER WITHIN THE RANGE OF HEXABETS(hexadecimal alphabets)")
 				fmt.Print("> ")
 
-				letter, _ := reader.ReadString('\n')
-				letter = strings.TrimSpace(strings.ToLower(letter))
+				selectedSymbol, err := reader.ReadString('\n')
+				if err != nil {
+					fmt.Println(err)
+				}
+				selectedSymbol = strings.TrimSpace(strings.ToLower(selectedSymbol))
 
-				msg, ok := HexMessages[letter]
+				encodedMessage, ok := HexMessages[selectedSymbol]
 				if !ok {
 					fmt.Println("YOU ARE TO PICK HEXABETS ONLY (hexadecimal alphabets)")
 					fmt.Println("TRY AGAIN")
 					fmt.Println()
-
 					continue
 				}
 
-				fmt.Printf("HEXABET-'%v': " + msg, strings.ToUpper(letter))
+				fmt.Printf("HEXABET-'%v': %v\n", strings.ToUpper(selectedSymbol), encodedMessage)
 				fmt.Println()
 
 				fmt.Println("DO YOU WANT TO DE-ENCRYPT IT? (YES/NO)")
 				fmt.Print("> ")
-				ans, _ := reader.ReadString('\n')
-				ans = strings.TrimSpace(strings.ToLower(ans))
+				userResponse, err := reader.ReadString('\n')
+				if err != nil {
+					fmt.Println(err)
+				}
+				userResponse = strings.TrimSpace(strings.ToLower(userResponse))
 
-				if ans == "yes" {
-					tokens := Tokenize(msg)
+				if userResponse == "yes" {
+					tokens := tokenizer(encodedMessage)
 					fmt.Println()
-					fmt.Printf("DE-ENCRYPTED: %v\n", Capitalize(HexaWords(tokens)))
+					fmt.Printf("DE-ENCRYPTED: %v\n", capitalize(decodeAllMessage(tokens, 16)))
 					fmt.Println()
 
-				} else if ans == "no" {
+				} else if userResponse == "no" {
 					fmt.Println("SEE YOU LATER THEN")
 					fmt.Println()
 					continue
@@ -140,7 +148,7 @@ func main() {
 				} else {
 					fmt.Println("INVALID INPUT - LOGGED OUT")
 					fmt.Println()
-					return
+					continue
 				}
 				break
 			}
@@ -153,33 +161,38 @@ func main() {
 				fmt.Println("PICK A LETTER WITHIN THE RANGE OF LETTERS THAT MAKES UP THE LANGUAGE YOU ARE CURRENTLY SPEAKING")
 				fmt.Print("> ")
 
-				letter, _ := reader.ReadString('\n')
-				letter = strings.TrimSpace(strings.ToLower(letter))
+				selectedSymbol, err := reader.ReadString('\n')
+				if err != nil {
+					fmt.Println(err)
+				}
+				selectedSymbol = strings.TrimSpace(strings.ToLower(selectedSymbol))
 
-				msg, ok := BinMessages[letter]
+				encodedMessage, ok := BinMessages[selectedSymbol]
 				if !ok {
 					fmt.Println("YOU ARE TO PICK BINABETS ONLY(letters that makes up the language)")
 					fmt.Println("TRY AGAIN")
 					fmt.Println()
-
 					continue
 				}
 
-				fmt.Printf("BINABET-'%v': " + msg, strings.ToUpper(letter))
+				fmt.Printf("BINABET-'%v': %v\n", strings.ToUpper(selectedSymbol), encodedMessage)
 				fmt.Println()
 
 				fmt.Println("DO YOU WANT TO DE-ENCRYPT IT? (YES/NO)")
 				fmt.Print(">")
-				ans, _ := reader.ReadString('\n')
-				ans = strings.TrimSpace(strings.ToLower(ans))
+				userResponse, err := reader.ReadString('\n')
+				if err != nil {
+					fmt.Println(err)
+				}
+				userResponse = strings.TrimSpace(strings.ToLower(userResponse))
 
-				if ans == "yes" {
-					tokens := Tokenize(msg)
+				if userResponse == "yes" {
+					tokens := tokenizer(encodedMessage)
 					fmt.Println()
-					fmt.Printf("DE-ENCRYPTED: %v\n", Capitalize(BinWords(tokens)))
+					fmt.Printf("DE-ENCRYPTED: %v\n", capitalize(decodeAllMessage(tokens, 2)))
 					fmt.Println()
 
-				} else if ans == "no" {
+				} else if userResponse == "no" {
 					fmt.Println("SEE YOU LATER THEN")
 					fmt.Println()
 					continue
@@ -187,7 +200,7 @@ func main() {
 				} else {
 					fmt.Println("INVALID INPUT - LOGGED OUT")
 					fmt.Println()
-					return
+					continue
 				}
 				break
 			}
@@ -199,11 +212,14 @@ func main() {
 	}
 }
 
-func Capitalize(str string) string {
+func capitalize(str string) string {
 	words := strings.Fields(str)
 
 	for i := 0; i < len(words); i++ {
-		words[i] = strings.ToUpper(string(words[i][0])) + strings.ToLower(words[i][1:])
+		if len(words[i]) == 0 {
+			continue
+		}
+		words[i] = strings.ToUpper(string(words[i][:1])) + strings.ToLower(words[i][1:])
 	}
 	return strings.Join(words, " ")
 }
