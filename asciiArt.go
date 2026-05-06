@@ -14,7 +14,7 @@ func colour(text, color string) string {
 func main() {
 	line := "Hello World"
 
-	AsciiArt(line, "\033[1;35m")
+	AsciiArt(line, "\033[1;33m")
 	time.Sleep(1 * time.Second)
 }
 
@@ -41,5 +41,6 @@ func AsciiArt(input, color string) {
 		}
 		fmt.Println(colour(lineOutput, color))
 		time.Sleep(1 * time.Second)
+
 	}
 }
