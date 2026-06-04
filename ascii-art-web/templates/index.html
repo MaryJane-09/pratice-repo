@@ -4,7 +4,17 @@
     <title>MJ Website</title>
 </head>
 <body>
-    <h1>Hello MJ</h1>
-    <p>This page came from a template.</p>
+    <h1>Hello {{.Name}}</h1>
+    <p>{{.Message}}.</p>
+
+    <form action="\asciiart" method="POST">
+    <textarea name="input"></textarea>
+    <l>
+    <input type="radio" name="banner" value="standard"> Standard
+    <input type="radio" name="banner" value="shadow"> Shadow
+    <input type="radio" name="banner" value="thinkertoy"> Thinkertoy
+    </l>
+    <button type="submit">Send</button>
+</form>
 </body>
 </html>
