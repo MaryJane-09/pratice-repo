@@ -4,17 +4,16 @@
     <title>MJ Website</title>
 </head>
 <body>
-    <h1>Hello {{.Name}}</h1>
-    <p>{{.Message}}.</p>
 
-    <form action="\asciiart" method="POST">
+    <form action="/ascii-art" method="POST">
     <textarea name="input"></textarea>
-    <l>
-    <input type="radio" name="banner" value="standard"> Standard
-    <input type="radio" name="banner" value="shadow"> Shadow
-    <input type="radio" name="banner" value="thinkertoy"> Thinkertoy
-    </l>
-    <button type="submit">Send</button>
+    <select name = "banner">
+        <option value="standard.txt"> Standard </option>
+        <option value="shadow.txt">Shadow</option>
+        <option value="thinkertoy.txt">thinkertoy</option>
+        <option value="none">None</option>
+    </select>
+    <button type="submit">Generate</button>
 </form>
 </body>
 </html>

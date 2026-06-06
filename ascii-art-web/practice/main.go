@@ -41,8 +41,7 @@ func pageHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "contact us at 07036702434")
 	default:
 		http.NotFound(w, r)
-	}
-
+	 }
 }
 
 func main() {
