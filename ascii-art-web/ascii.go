@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-	var tmpl = template.Must(template.ParseFiles("templates/index.html"))
+	var tmpl = template.Must(template.ParseFiles("templates/index"))
 
 	
 
