@@ -42,18 +42,18 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		_, errs := asciiart.ValidateInput(input)
-		if errs != nil {
+		_, err = asciiart.ValidateInput(input)
+		if err != nil {
 			http.Error(w, "Bad Request", http.StatusBadRequest)
 			return
 		}
 
 		result := asciiart.GenerateArt(input, banner)
 
-		ers := tmpl.Execute(w, Data{
+		err = tmpl.Execute(w, Data{
 			Result: result,
 		})
-		if ers != nil {
+		if err != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
