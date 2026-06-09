@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strings"
 )
 
 type Data struct {
@@ -26,13 +27,15 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
-		return
 	}
 
 	if r.Method == http.MethodPost {
 		input := r.FormValue("input")
-		bannerName := r.FormValue("banner")
+		if strings.ContainsAny(input, "\n") {
+			fmt.Println(true)
+		}
 
+		bannerName := r.FormValue("banner")
 		fmt.Println(input)
 		fmt.Println(bannerName)
 
@@ -41,6 +44,7 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
+		fmt.Println(asciiart.GenerateArt(input, banner))
 
 		_, err = asciiart.ValidateInput(input)
 		if err != nil {
