@@ -24,14 +24,14 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		err := tmpl.Execute(w, nil)
 		if err != nil {
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			w.WriteHeader(500)
 			return
 		}
 	}
 
 	if r.Method == http.MethodPost {
 		input := r.FormValue("input")
-		if strings.ContainsAny(input, "\n") {
+		if strings.ContainsAny(input, "\\n") {
 			fmt.Println(true)
 		}
 
@@ -41,14 +41,15 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 
 		banner, err := asciiart.BannerCheck("banners/" + bannerName)
 		if err != nil {
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			w.WriteHeader(500)
 			return
 		}
+		fmt.Printf("%q\n", input)
 		fmt.Println(asciiart.GenerateArt(input, banner))
 
 		_, err = asciiart.ValidateInput(input)
 		if err != nil {
-			http.Error(w, "Bad Request", http.StatusBadRequest)
+			w.WriteHeader(400)
 			return
 		}
 
@@ -58,7 +59,7 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 			Result: result,
 		})
 		if err != nil {
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			w.WriteHeader(500)
 			return
 		}
 

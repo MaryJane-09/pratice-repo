@@ -11,12 +11,12 @@
 <body>
 
     <form action="/ascii-art" method="POST">
-    <textarea name="input"></textarea>
+    <textarea name="input" placeholder="input a text"></textarea>
     <select name = "banner">
+        <option value="" selected disabled> Select a banner</option>
         <option value="standard.txt"> Standard </option>
         <option value="shadow.txt">Shadow</option>
         <option value="thinkertoy.txt">thinkertoy</option>
-        <option selected value="none"> None</option>
     </select>
     <button type="submit">Generate</button>
 </form>
