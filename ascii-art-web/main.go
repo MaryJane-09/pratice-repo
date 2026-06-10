@@ -31,9 +31,6 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 		input := r.FormValue("input")
-		if strings.ContainsAny(input, "\\n") {
-			fmt.Println(true)
-		}
 
 		bannerName := r.FormValue("banner")
 		fmt.Println(input)
