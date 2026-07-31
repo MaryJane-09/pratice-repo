@@ -1,0 +1,6 @@
+print("Starting the kitchen machine...")
+print("Grinding espresso beans...")
+print("Pouring hot water into cup...")
+print("Adding steamed milk...")
+print("Fulfillment complete!")
+print("Attempting to brew...")
